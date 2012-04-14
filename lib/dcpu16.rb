@@ -1,0 +1,6 @@
+require 'core_ext/fixnum'
+require 'dcpu16/errors'
+require 'dcpu16/memory'
+require 'dcpu16/instructions_table'
+require 'dcpu16/values'
+require 'dcpu16/cpu'
