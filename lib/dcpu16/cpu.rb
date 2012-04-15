@@ -33,6 +33,10 @@ module DCPU16
       @instructions_table ||= build_instructions_table
     end
 
+    def interrupts
+      @interrupts ||= {}
+    end
+
     attr_reader :registers
 
     attr_reader :cycles
@@ -243,6 +247,11 @@ module DCPU16
         implement(0xff01, "JSR", 2) do |cpu, a, b|
           cpu.push(cpu.regget(:PC))
           cpu.regset(:PC, a.get)
+        end
+        implement(0xff33, "SYS", 2) do |cpu, a, b|
+          if handler = cpu.interrupts[a.get]
+            handler.call(cpu)
+          end
         end
       end
     end

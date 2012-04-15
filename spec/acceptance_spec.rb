@@ -111,4 +111,28 @@ describe "Acceptance Tests" do
 
   end
 
+   describe "Interpreter hook" do
+
+    let(:interrupt_handler) do
+        Proc.new { |cpu| cpu.regset(:X, 42) }
+    end
+
+    let(:sys_test) do
+      [
+        # SYS opcode 0x33, vector 0x12
+        ((0x33<<4) | ((0x12|0x20)<<10)),
+        0x7dc1,
+        0x0001
+      ]
+    end
+
+    it "invokes the interrupt handler which stores a value in X" do
+      cpu.interrupts[0x12] = interrupt_handler
+      cpu.memory.load(sys_test)
+      cpu.run(5)
+      cpu.registers[:X].should == 42
+    end
+
+  end
+
 end

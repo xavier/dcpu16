@@ -33,7 +33,13 @@ end
 cpu = DCPU16::CPU.new
 cpu.add_observer(TestObserver.new)
 
-cpu.memory.load(Programs::FACT_5)
+#cpu.memory.load(Programs::FACT_5)
+cpu.memory.load(      [
+        # SYS opcode
+        ((0x33<<4) | ((0x12|0x20)<<10)),
+        0x7dc1,
+        0x0001
+      ])
 cpu.run(50)
 
 # cpu.reset!

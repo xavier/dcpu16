@@ -1,4 +1,4 @@
-# DCPU-16
+# DCPU16
 
 This is yet another [DCPU-16](http://0x10c.com/doc/dcpu-16.txt) bytecode interpreter written in Ruby.
 
@@ -18,9 +18,31 @@ The code is surely **not as clean as I want it to be**, parts of the VM are stil
 * The **external API will change** (especially code loading and the ugly parameters to the run method)
 * **Instrumentation** must to be better documented, perhaps provider an observer class skeletton
 * Verify the correctness of the cycles calculations
-* Support callbacks into the interpreter
 * ...
 
+## Extensions
+
+The interpreted supports the following proprietary features:
+
+### SYS (opcode 0x33)
+
+This new non-basic opcode will invoke a user-defined hook in the interpreter (there can up to 0x40 of them).
+
+In Ruby:
+
+```ruby
+cpu = DCPU16::CPU.new
+cpu.interrupts[0x12] = Proc.new { |cpu| cpu.regset(:X, 42) }
+```
+
+in DASM16:
+
+```DASM16
+  ; ...
+  SYS 0x12
+  IFE X, 42   ; true, will perform the next instruction
+  ; ...
+```
 
 ## Playing Around
 

@@ -631,6 +631,30 @@ describe DCPU16::CPU do
 
     end
 
+    describe "SYS" do
+
+      let(:instruction) { cpu.instructions_table.lookup(0xff33) }
+
+      it "corresponds to our special internal opcode 0xff33" do
+        instruction.mnemonic.should == "SYS"
+      end
+
+      it "executes the corresponding interrupt handler" do
+        handler = mock()
+        cpu.interrupts[0x12] = handler
+        a.set 0x12
+        handler.should_receive(:call).with(cpu)
+        instruction.execute(cpu, a, nil)
+      end
+
+      it "does nothing if not interrupt handler has been set" do
+        a.set 0x12
+        instruction.execute(cpu, a, nil)
+      end
+
+    end
+
+
   end
 
 end
