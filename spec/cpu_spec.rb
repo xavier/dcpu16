@@ -619,6 +619,30 @@ describe DCPU16::CPU do
 
     end
 
+    describe "IFB" do
+
+      let(:instruction) { cpu.instructions_table.lookup(0x0f) }
+
+      it "corresponds to opcode 0x0f" do
+        instruction.mnemonic.should == "IFB"
+      end
+
+      it "performs the next instruction if a & b != 0" do
+        a.set 0b000110
+        b.set 0b010100
+        cpu.should_not_receive(:skip_next_instruction!)
+        instruction.execute(cpu, a, b)
+      end
+
+      it "skips the next instruction if a & b == 0" do
+        a.set 0b000010
+        b.set 0b010100
+        cpu.should_receive(:skip_next_instruction!)
+        instruction.execute(cpu, a, b)
+      end
+
+    end
+
     describe "JSR" do
 
       let(:instruction) { cpu.instructions_table.lookup(0xff01) }
