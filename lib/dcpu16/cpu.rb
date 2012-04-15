@@ -90,6 +90,8 @@ module DCPU16
         inst.execute(self, value_a, value_b)
         fire_callback(:after_execution, self, inst, value_a, value_b)
       end
+    rescue UnexpectedOpcode
+      fire_callback(:unexpected_opcode, self, opcode, a, b)
     end
 
     def trace_instruction(mnemonic, value_a, value_b)

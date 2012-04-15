@@ -244,7 +244,7 @@ describe DCPU16::CPU do
       let(:instruction) { mock(:mnemonic => "SET") }
 
       before do
-        instructions_table.should_receive(:lookup).with(0x01).and_return(instruction)
+        instructions_table.stub!(:lookup).with(0x01).and_return(instruction)
         cpu.stub!(:instructions_table => instructions_table)
       end
 
@@ -275,6 +275,12 @@ describe DCPU16::CPU do
           cpu.skip_next_instruction?.should be_false
         end
 
+      end
+
+      it "fires a callback when attempting to execute an unexpected opcode" do
+        cpu.should_receive(:fire_callback).with(:unexpected_opcode, cpu, 0xff07, 12, nil)
+        instructions_table.should_receive(:lookup).with(0xff07).and_raise(DCPU16::UnexpectedOpcode)
+        cpu.execute_instruction!(0, 7, 12)
       end
 
     end
