@@ -14,6 +14,10 @@ module DCPU16
       raise NotImplementedError
     end
 
+    def to_s
+      self.class.name
+    end
+
   end
 
   class RegisterValue < Value
@@ -46,10 +50,6 @@ module DCPU16
       @cpu.push(word)
     end
 
-    def to_s
-      "StackValue"
-    end
-
   end
 
   class ImmutableStackValue < Value
@@ -59,11 +59,7 @@ module DCPU16
     end
 
     def set(word)
-      # raise Crash.new("Cannot set on ImmutableStackOp")
-    end
-
-    def to_s
-      "ImmutableStackValue"
+      # Noop
     end
 
   end
@@ -75,7 +71,7 @@ module DCPU16
     end
 
     def set(word)
-      # raise Crash.new("Literal values cannot be set")
+      # Noop
     end
 
     def value

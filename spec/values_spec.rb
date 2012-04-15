@@ -26,6 +26,14 @@ describe "Values" do
 
     end
 
+    describe "#to_s" do
+
+      it "includes the register" do
+        value.to_s.should =~ /RegisterValue: X/
+      end
+
+    end
+
   end
 
   describe DCPU16::StackValue do
@@ -55,6 +63,14 @@ describe "Values" do
 
     end
 
+    describe "#to_s" do
+
+      it "says it's a StackValue" do
+        value.to_s.should =~ /StackValue/
+      end
+
+    end
+
   end
 
   describe DCPU16::ImmutableStackValue do
@@ -76,6 +92,14 @@ describe "Values" do
         expect {
           value.set(0x4567)
         }.not_to raise_error
+      end
+
+    end
+
+    describe "#to_s" do
+
+      it "says it's an ImmutableStackValue" do
+        value.to_s.should =~ /StackValue/
       end
 
     end
@@ -104,6 +128,14 @@ describe "Values" do
 
     end
 
+    describe "#to_s" do
+
+      it "includes the literal" do
+        value.to_s.should =~ /LiteralValue: 0x1234/
+      end
+
+    end
+
   end
 
   describe DCPU16::AddressValue do
@@ -127,6 +159,14 @@ describe "Values" do
       it "stores the value at the given memory address" do
         memory.should_receive(:[]=).with(0x4321, 0x4567)
         value.set(0x4567)
+      end
+
+    end
+
+    describe "#to_s" do
+
+      it "includes the address" do
+        value.to_s.should =~ /AddressValue: \[0x4321\]/
       end
 
     end
