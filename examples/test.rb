@@ -32,7 +32,6 @@ end
 
 cpu = DCPU16::CPU.new
 cpu.add_observer(TestObserver.new)
-
 cpu.memory.load(Programs::FACT_5)
 cpu.run(50)
 
