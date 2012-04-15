@@ -16,7 +16,7 @@ Although the interpreter is functional, this is just a toy project with no aim t
 The code is surely **not as clean as I want it to be**, parts of the VM are still under construction
 
 * The **external API will change** (especially code loading and the ugly parameters to the run method)
-* **Unobtrusive instrumentation** must to be added to allow easy stepping, tracing, watching and snapshots
+* **Instrumentation** must to be improved to allow easy stepping, tracing, watching and snapshots
 * Verify the correctness of the cycles calcultions
 * ...
 

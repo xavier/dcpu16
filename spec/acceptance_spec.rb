@@ -22,7 +22,7 @@ describe "Acceptance Tests" do
 
     it "stores the result of fact(5) in X" do
       cpu.memory.load(factorial_5)
-      cpu.run(false, 150)
+      cpu.run(150)
       cpu.registers[:X].should == 120
     end
 
@@ -105,7 +105,7 @@ describe "Acceptance Tests" do
 
     it "stores the result of fib(7) in X" do
       cpu.memory.load(fibonacci)
-      cpu.run(false, 300)
+      cpu.run(300)
       cpu.registers[:X].should == 13
     end
 

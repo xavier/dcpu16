@@ -2,6 +2,8 @@ module DCPU16
 
   class CPU
 
+    include Instrumentation
+
     def initialize
       reset!
     end
@@ -39,17 +41,11 @@ module DCPU16
       @cycles += n
     end
 
-    def run(step_by_step = false, max_cycles = 20)
+    def run(max_cycles = 20)
       loop do
+        fire_callback(:before_step, self)
         step!
-        # TODO Replace with propoer instrumentation
-        if step_by_step
-          puts "-" * 80
-          puts "Registers : #{dump}"
-          puts "Stack     : #{stack}"
-          puts "Cycles    : #{cycles} / #{max_cycles}"
-          gets
-        end
+        fire_callback(:after_step, self)
         break unless cycles < max_cycles
       end
     end
@@ -83,10 +79,12 @@ module DCPU16
       value_a = make_value(a)
       value_b = make_value(b) if b
       if skip_next_instruction?
+        fire_callback(:skipped_instruction, self, inst, value_a, value_b)
         skip_instruction!
       else
-        #puts trace_instruction(inst.mnemonic, value_a, value_b)
+        fire_callback(:before_execution, self, inst, value_a, value_b)
         inst.execute(self, value_a, value_b)
+        fire_callback(:after_execution, self, inst, value_a, value_b)
       end
     end
 
@@ -154,7 +152,6 @@ module DCPU16
     end
 
     def skip_instruction!
-      #puts " --- SKIPPED #{inst.mnemonic} (#{value_a}) (#{value_b})"
       self.tick!
       @skip_next_instruction = false
     end
