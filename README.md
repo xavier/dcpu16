@@ -63,6 +63,8 @@ You know the deal:
 
 ## License
 
+Copyright © 2012, Xavier Defrang
+
 This code is released under the MIT license:
 
 * [www.opensource.org/licenses/MIT](http://www.opensource.org/licenses/MIT)
