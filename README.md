@@ -16,8 +16,9 @@ Although the interpreter is functional, this is just a toy project with no aim t
 The code is surely **not as clean as I want it to be**, parts of the VM are still under construction
 
 * The **external API will change** (especially code loading and the ugly parameters to the run method)
-* **Instrumentation** must to be improved to allow easy stepping, tracing, watching and snapshots
-* Verify the correctness of the cycles calcultions
+* **Instrumentation** must to be better documented, perhaps provider an observer class skeletton
+* Verify the correctness of the cycles calculations
+* Support callbacks into the interpreter
 * ...
 
 
