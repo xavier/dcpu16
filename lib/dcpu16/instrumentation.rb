@@ -1,41 +1,23 @@
+require 'observer'
+
 module DCPU16
-
-  module InstrumentationCallbacks
-
-    DumpRegisters = Proc.new { |cpu, _| puts "Registers : #{cpu.dump}\r" }
-    DumpStack     = Proc.new { |cpu, _| puts "Stack     : #{cpu.stack}" }
-    DumpCycles    = Proc.new { |cpu, _| puts "Cycles    : #{cpu.cycles}" }
-    DumpMemory    = Proc.new { |cpu, _| puts cpu.memory.dump }
-    StepByStep    = Proc.new { |cpu, _| gets }
-
-  end
 
   module Instrumentation
 
-    def instrumentation_callbacks
-      @instrumentation_callbacks ||= {
-        :before_step         => [],
-        :after_step          => [],
-        :before_execution    => [],
-        :after_execution     => [],
-        :skipped_instruction => [],
-      }
-    end
+    module Observer
 
-    def instrumentation_callbacks_for(event)
-      instrumentation_callbacks[event] || (raise ArgumentError.new("Unknown event: #{event.inspect}, Valid events: #{instrumentation_callbacks.keys.inspect}"))
-    end
-
-    def on(*events, &block)
-      events.each do |event|
-        instrumentation_callbacks_for(event) << block
+      def update(*args)
+        method = args.shift
+        __send__(method, *args) if respond_to?(method)
       end
+
     end
+
+    include Observable
 
     def fire_callback(event, *args)
-      instrumentation_callbacks_for(event).each do |proc|
-        proc.call(args)
-      end
+      changed(true)
+      notify_observers(*args.unshift(event))
     end
 
   end

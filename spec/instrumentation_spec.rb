@@ -4,57 +4,41 @@ require 'spec_helper'
 describe DCPU16::Instrumentation do
 
   let(:cpu)      { DCPU16::CPU.new }
-  let(:observer) { mock() }
 
-  describe "#on" do
+  class Observer
 
-    it "registers a callback for a given event" do
-      cpu.on(:after_step) {}
-      cpu.instrumentation_callbacks[:after_step].should have(1).item
-    end
+    include DCPU16::Instrumentation::Observer
 
-    it "registers a callback for multiple events" do
-      cpu.on(:before_step, :after_step) {}
-      cpu.instrumentation_callbacks[:before_step].should have(1).item
-      cpu.instrumentation_callbacks[:after_step].should have(1).item
-    end
-
-    it "registers multiple callbacks for a single event" do
-      cpu.on(:before_step) {}
-      cpu.on(:before_step) {}
-      cpu.instrumentation_callbacks[:before_step].should have(2).items
-    end
-
-    it "raises an exception when given an invalid event symbol" do
-      expect {
-        cpu.on(:bogus) {}
-      }.to raise_error(ArgumentError, /bogus/)
+    def after_step(*args)
     end
 
   end
 
-  context "when a callback has been registered" do
+  let(:observer) { Observer.new }
 
-    before do
-      cpu.on(:after_step) { |args| observer.after_step(*args) }
+  describe "Observer module" do
+
+    describe "#update" do
+
+      it "dispatches the call to the method if it exists" do
+        observer.should_receive(:after_step)
+        observer.update(:after_step)
+      end
+
+      it "does nothing if the method does not exists" do
+        expect {
+          observer.update(:some_undefined_method)
+        }.not_to raise_error
+      end
+
     end
 
-    describe '#instrumentation_callbacks_for' do
+  end
 
-      it "returns a collection of callbacks" do
-        cpu.instrumentation_callbacks_for(:after_step).should_not be_empty
-      end
+  context "when an observer has been added" do
 
-      it "returns an empty collection if the event has no callbacks" do
-        cpu.instrumentation_callbacks_for(:before_step).should be_empty
-      end
-
-      it "raises an exception when given an invalid event symbol" do
-        expect {
-          cpu.instrumentation_callbacks_for(:bogus)
-        }.to raise_error(ArgumentError, /bogus/)
-      end
-
+    before do
+      cpu.add_observer(observer)
     end
 
     describe '#fire_callback' do
