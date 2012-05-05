@@ -241,10 +241,10 @@ module DCPU16
         implement(0x9, "AND", 1) { |cpu, a, b| a.set(a.get & b.get) }
         implement(0xa, "BOR", 1) { |cpu, a, b| a.set(a.get | b.get) }
         implement(0xb, "XOR", 1) { |cpu, a, b| a.set(a.get ^ b.get) }
-        implement(0xc, "IFE", 2) { |cpu, a, b| cpu.skip_next_instruction! if a.get != b.get }
-        implement(0xd, "IFN", 2) { |cpu, a, b| cpu.skip_next_instruction! if a.get == b.get }
-        implement(0xe, "IFG", 2) { |cpu, a, b| cpu.skip_next_instruction! if a.get <= b.get }
-        implement(0xf, "IFB", 2) { |cpu, a, b| cpu.skip_next_instruction! if (a.get & b.get) == 0 }
+        implement(0xc, "IFE", 2) { |cpu, a, b| cpu.skip_next_instruction! unless a.get == b.get }
+        implement(0xd, "IFN", 2) { |cpu, a, b| cpu.skip_next_instruction! unless a.get != b.get }
+        implement(0xe, "IFG", 2) { |cpu, a, b| cpu.skip_next_instruction! unless a.get > b.get }
+        implement(0xf, "IFB", 2) { |cpu, a, b| cpu.skip_next_instruction! unless (a.get & b.get) != 0 }
         # We treat non basic opcodes the same way
         implement(0xff01, "JSR", 2) do |cpu, a, b|
           cpu.push(cpu.regget(:PC))
