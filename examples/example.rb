@@ -11,27 +11,30 @@ class TestObserver
   include DCPU16::Instrumentation::Observer
 
   def before_step(cpu)
-    printf("[%8d]%s\n", cpu.cycles, "-" * 80)
-    puts cpu.dump
-  # puts cpu.stack
+    puts
+    puts "Cycle  : #{cpu.cycles}"
+    puts "Before : #{cpu.dump}"
   end
 
   def after_step(cpu)
-    #gets
+    puts " After : #{cpu.dump}"
   end
 
   def before_execution(cpu, inst, a, b)
-    puts cpu.trace_instruction(inst.mnemonic, a, b)
+    puts "  Exec : #{inst.mnemonic} #{a} #{b}"
   end
 
   def skipped_instruction(cpu, inst, a, b)
-    puts "*Skipped* (" + cpu.trace_instruction(inst.mnemonic, a, b) + ")"
+    puts "  Skip : (#{inst.mnemonic} #{a} #{b})"
   end
 
 end
 
+
+
+
 cpu = DCPU16::CPU.new
 cpu.add_observer(TestObserver.new)
-cpu.memory.load(DCPU16::BinaryFile.read_dump(dmp_file_path))
-cpu.run(50)
-puts cpu.dump
+#cpu.memory.load(DCPU16::BinaryFile.read_dump(dmp_file_path))
+cpu.memory.load([0xa861, 0x7c01, 0x1000, 0x2161, 0x2000, 0x8463, 0x806d, 0x7dc1, 0x0003])
+cpu.run(83)
