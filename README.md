@@ -24,7 +24,7 @@ The code is surely **not as clean as I want it to be**, parts of the VM are stil
 
 The interpreted supports the following proprietary features:
 
-### SYS (opcode 0x33)
+### INT (opcode 0x33)
 
 This new non-basic opcode will invoke a user-defined hook in the interpreter (there can up to 0x40 of them).
 
@@ -39,7 +39,7 @@ in DASM16:
 
 ```DASM16
   ; ...
-  SYS 0x12
+  INT 0x12
   IFE X, 42   ; true, will perform the next instruction
   ; ...
 ```

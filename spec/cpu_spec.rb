@@ -661,12 +661,12 @@ describe DCPU16::CPU do
 
     end
 
-    describe "SYS" do
+    describe "INT" do
 
       let(:instruction) { cpu.instructions_table.lookup(0xff33) }
 
       it "corresponds to our special internal opcode 0xff33" do
-        instruction.mnemonic.should == "SYS"
+        instruction.mnemonic.should == "INT"
       end
 
       it "executes the corresponding interrupt handler" do

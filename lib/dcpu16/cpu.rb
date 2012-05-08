@@ -250,7 +250,7 @@ module DCPU16
           cpu.push(cpu.regget(:PC))
           cpu.regset(:PC, a.get)
         end
-        implement(0xff33, "SYS", 2) do |cpu, a, b|
+        implement(0xff33, "INT", 2) do |cpu, a, b|
           if handler = cpu.interrupts[a.get]
             handler.call(cpu)
           end
